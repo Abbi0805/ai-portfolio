@@ -1,0 +1,15 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / Remotion
+remotion/node_modules/
+remotion/.remotion/
+
+# Render-Output & Assets
+out/
