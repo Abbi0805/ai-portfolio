@@ -41,6 +41,7 @@ def build_render_props(spec: ReelSpec) -> RenderProps:
     return RenderProps(
         hook=spec.hook,
         cta=spec.cta,
+        tool_name=spec.tool_name,
         accent_color=spec.accent_color,
         audio_url=audio_url,
         duration_in_seconds=round(total, 2),

@@ -18,6 +18,7 @@ export const renderScene = z.object({
 export const reelProps = z.object({
   hook: z.string(),
   cta: z.string(),
+  tool_name: z.string(),
   accent_color: z.string(),
   audio_url: z.string(),
   duration_in_seconds: z.number(),

@@ -20,6 +20,14 @@ AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-15-pre
 # Günstiges Modell für Fülltext, teures für Hooks (Cost-Routing, siehe ai-system-hub)
 AZURE_OPENAI_DEPLOYMENT_FAST = os.getenv("AZURE_OPENAI_DEPLOYMENT_FAST", AZURE_OPENAI_DEPLOYMENT)
 
+# --- Nische & Affiliate-Funnel (AI-Tools) ----------------------------------
+# Content-Library-Strategie: ALLE Reels drehen sich um EIN Affiliate-Produkt
+# und trichtern auf denselben Link. Das maximiert die Conversion pro Klick.
+NICHE = os.getenv("NICHE", "ai-tools")
+AFFILIATE_TOOL_NAME = os.getenv("AFFILIATE_TOOL_NAME", "the tool")
+AFFILIATE_LINK = os.getenv("AFFILIATE_LINK", "")  # landet in Bio / Pinned-Comment
+AFFILIATE_DISCLOSURE = os.getenv("AFFILIATE_DISCLOSURE", "#ad")  # Pflicht-Kennzeichnung
+
 # --- Asset-Provider --------------------------------------------------------
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM")  # "Rachel"

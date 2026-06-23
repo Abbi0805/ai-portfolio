@@ -7,6 +7,14 @@ gerendertes vertikales Video → (optional) Auto-Posting.
 Verbindet die **Python/Azure-LLM-Welt** der übrigen Portfolio-Projekte mit der
 **Node/React-Renderschicht** von [Remotion](https://www.remotion.dev/).
 
+**Nische: AI-Tools.** Jedes Reel zeigt **einen konkreten Use-Case eines einzigen
+Affiliate-Tools** und trichtert auf denselben Link in Bio. Diese „Content-Library
+um einen Affiliate"-Strategie maximiert die Conversion: Tool in `.env`
+(`AFFILIATE_TOOL_NAME`), 20–30 Use-Cases als Topics, alle Reels führen auf
+`AFFILIATE_LINK`. Hintergrund: Short-Form-Ad-Revenue ist minimal ($0,40–1,00/1k auf
+TikTok, $0,05–0,10/1k auf Shorts) — das Geld kommt aus **Affiliate + Sponsoring**,
+und AI-Tools sind dort Spitze (Nachfrage > Angebot, Sponsoring $200–1k/Video).
+
 ## Problem
 
 "Hunderte Reels automatisiert posten" scheitert selten am Rendern, sondern an drei Dingen:

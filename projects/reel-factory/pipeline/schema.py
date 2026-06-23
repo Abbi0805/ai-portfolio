@@ -23,12 +23,13 @@ class Scene(BaseModel):
 
 
 class ReelSpec(BaseModel):
-    """Vollständiges Reel-Konzept, vom Planner-LLM erzeugt."""
+    """Vollständiges Reel-Konzept, vom Planner-LLM erzeugt (AI-Tools-Nische)."""
 
     topic: str
+    tool_name: str = Field(..., description="Das AI-Tool, um das sich dieses Reel dreht (Affiliate-Produkt).")
     hook: str = Field(..., description="Erste 1-2 Sekunden. Wichtigster Satz für die Watch-Time.")
     scenes: List[Scene] = Field(..., min_length=2, max_length=6)
-    cta: str = Field(..., description="Call-to-Action am Ende, z. B. 'Folgen für mehr'.")
+    cta: str = Field(..., description="Affiliate-CTA, verweist auf den Link in Bio.")
     accent_color: str = Field("#00E0A4", description="Hex-Akzentfarbe für Untertitel/Branding.")
     music_mood: str = Field("uplifting", description="Stimmung für die Hintergrundmusik-Auswahl.")
 
@@ -55,6 +56,7 @@ class RenderProps(BaseModel):
 
     hook: str
     cta: str
+    tool_name: str = Field(..., description="AI-Tool im Fokus – wird als Badge eingeblendet.")
     accent_color: str
     audio_url: str = Field(..., description="URL/Pfad zum Voiceover-Audio.")
     duration_in_seconds: float

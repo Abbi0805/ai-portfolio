@@ -20,7 +20,17 @@ def publish_reel(video_path: str, caption: str, hashtags: list[str]) -> dict:
     ig_token = os.getenv("INSTAGRAM_ACCESS_TOKEN")
     ig_user_id = os.getenv("INSTAGRAM_BUSINESS_ACCOUNT_ID")
 
-    full_caption = caption + "\n\n" + " ".join(f"#{h}" for h in hashtags)
+    # Affiliate-Disclosure ist Pflicht (Plattform-Richtlinien + Wettbewerbsrecht).
+    # Wird hier zentral erzwungen, damit kein Reel ohne Kennzeichnung rausgeht.
+    disclosure = settings.AFFILIATE_DISCLOSURE
+    link_line = f"👉 {settings.AFFILIATE_LINK}" if settings.AFFILIATE_LINK else "👉 Link in Bio"
+    full_caption = "\n\n".join(
+        [
+            f"{caption} {disclosure}".strip(),
+            link_line,
+            " ".join(f"#{h}" for h in hashtags),
+        ]
+    )
 
     if not (ig_token and ig_user_id):
         # Dry-Run: protokollieren statt posten, damit die Pipeline ohne Keys läuft.

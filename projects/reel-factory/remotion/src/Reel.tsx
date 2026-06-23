@@ -17,7 +17,7 @@ import type {ReelProps} from './schema';
 
 const FALLBACK_BG = 'linear-gradient(160deg, #0c0c0c 0%, #1a1a1a 100%)';
 
-export const Reel: React.FC<ReelProps> = ({hook, cta, accent_color, audio_url, scenes, captions}) => {
+export const Reel: React.FC<ReelProps> = ({hook, cta, tool_name, accent_color, audio_url, scenes, captions}) => {
   const frame = useCurrentFrame();
   const {fps, durationInFrames} = useVideoConfig();
   const timeMs = (frame / fps) * 1000;
@@ -52,6 +52,23 @@ export const Reel: React.FC<ReelProps> = ({hook, cta, accent_color, audio_url, s
 
       {/* Voiceover */}
       {audio_url && audio_url !== 'PLACEHOLDER_AUDIO' ? <Audio src={audio_url} /> : null}
+
+      {/* Tool-Badge oben (durchgehendes Branding der Affiliate-Nische) */}
+      <AbsoluteFill style={{justifyContent: 'flex-start', alignItems: 'center', paddingTop: 120}}>
+        <span
+          style={{
+            color: accent_color,
+            border: `3px solid ${accent_color}`,
+            borderRadius: 999,
+            padding: '8px 24px',
+            fontSize: 40,
+            fontWeight: 700,
+            backgroundColor: 'rgba(0,0,0,0.35)',
+          }}
+        >
+          {tool_name}
+        </span>
+      </AbsoluteFill>
 
       {/* Hook (erste ~2s) */}
       <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: 80, opacity: hookOpacity}}>

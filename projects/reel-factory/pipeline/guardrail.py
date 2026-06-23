@@ -11,16 +11,22 @@ from typing import List
 
 from pipeline.schema import ReelSpec
 
-# Begriffe, die in einer brand-safe Pipeline nie automatisiert gepostet werden sollten.
+# Overpromising-Begriffe: in der AI-Tools-Nische der schnellste Weg zu
+# Vertrauensverlust + Plattform-Strikes. Bewusst hart blocken.
 BLOCKED_TERMS = {
-    "guaranteed returns",
+    "guaranteed",
+    "replace your job",
     "get rich quick",
-    "miracle cure",
-    "financial advice",  # rechtlich heikel -> bewusst blocken
+    "100% accurate",
+    "never makes mistakes",
+    "passive income guaranteed",
 }
 
 MAX_HOOK_WORDS = 16
 MAX_SCENE_WORDS = 16
+
+# Der CTA muss in den Affiliate-Funnel führen (Link in Bio).
+FUNNEL_TERMS = ("bio", "link", "comment")
 
 
 @dataclass
@@ -49,5 +55,11 @@ def check_reel(spec: ReelSpec) -> GuardResult:
 
     if not spec.accent_color.startswith("#"):
         violations.append("accent_color ist keine Hex-Farbe.")
+
+    # Nischen-Checks (AI-Tools / Affiliate-Funnel)
+    if not spec.tool_name.strip():
+        violations.append("Kein tool_name gesetzt – Reel hat keinen Affiliate-Fokus.")
+    if not any(term in spec.cta.lower() for term in FUNNEL_TERMS):
+        violations.append("CTA führt nicht in den Funnel (kein Verweis auf Bio/Link/Kommentar).")
 
     return GuardResult(ok=not violations, violations=violations)

@@ -11,20 +11,32 @@ Pipeline auch ohne Keys end-to-end durchläuft.
 from config import settings
 from pipeline.schema import ReelSpec, Scene
 
-SYSTEM_PROMPT = """Du bist Script-Writer für virale, faceless Short-Form-Videos
-(Instagram Reels / TikTok / YouTube Shorts) in einer festen Content-Nische.
+# Nische: AI-Tools. Strategie: jedes Reel zeigt EINEN konkreten Use-Case des
+# Affiliate-Tools und trichtert auf den Link in Bio (Content-Library-Funnel).
+SYSTEM_PROMPT = """Du bist Script-Writer für virale, faceless AI-Tool-Tutorials
+(Instagram Reels / TikTok / YouTube Shorts). Zielgruppe: Creators, Solopreneure,
+Knowledge-Worker, die mit AI-Tools schneller arbeiten wollen.
+
+Das Reel dreht sich um EIN konkretes Tool: {tool}. Es zeigt EINEN konkreten,
+sofort nachvollziehbaren Use-Case (kein generischer "Tool X ist großartig"-Pitch).
 
 Regeln:
-- Der Hook (erster Satz) muss in <2 Sekunden Neugier oder Spannung erzeugen.
-- 3-5 Szenen, jede ein kurzer, gesprochener Satz (max. ~14 Wörter).
-- Konkret, faktenbasiert, kein generisches LLM-Geschwafel, keine Floskeln.
-- Pro Szene ein präziser englischer Stock-Footage-Suchbegriff (b_roll_query).
-- Endet mit einem klaren, kurzen Call-to-Action.
+- Hook (<2 Sek): ein konkretes Ergebnis/Problem, das Neugier weckt
+  (z. B. "Ich habe 3 Stunden Recherche auf 4 Minuten reduziert").
+- 3-5 Szenen, jede ein kurzer gesprochener Satz (max. ~14 Wörter), die den
+  Workflow Schritt für Schritt zeigen. Konkret, kein Buzzword-Geschwafel.
+- b_roll_query: zeige Screen-/UI-/Tech-Ästhetik (z. B. "screen recording laptop ui",
+  "person typing keyboard closeup", "dashboard analytics screen").
+- KEINE Übertreibungen ("ersetzt deinen Job", "garantiert"), keine Falschaussagen
+  über Tool-Fähigkeiten.
+- cta: Affiliate-Funnel, verweist auf den Link in Bio, z. B.
+  "Link in Bio, um {tool} kostenlos zu testen.".
+- tool_name im Output ist immer exakt: {tool}.
 """
 
 
 def plan_reel(topic: str) -> ReelSpec:
-    """Erzeugt aus einem Topic ein vollständiges Reel-Konzept."""
+    """Erzeugt aus einem Topic (= Use-Case) ein Reel rund um das Affiliate-Tool."""
     if not settings.has_azure():
         return _stub(topic)
 
@@ -38,26 +50,29 @@ def plan_reel(topic: str) -> ReelSpec:
         api_version=settings.AZURE_OPENAI_API_VERSION,
         temperature=0.8,
     )
+    tool = settings.AFFILIATE_TOOL_NAME
     structured = llm.with_structured_output(ReelSpec)
     return structured.invoke(
         [
-            ("system", SYSTEM_PROMPT),
-            ("human", f"Erstelle ein Reel-Script zum Thema: {topic}"),
+            ("system", SYSTEM_PROMPT.format(tool=tool)),
+            ("human", f"Use-Case für ein Reel über {tool}: {topic}"),
         ]
     )
 
 
 def _stub(topic: str) -> ReelSpec:
     """Deterministischer Platzhalter ohne LLM-Aufruf (für Offline-Tests)."""
+    tool = settings.AFFILIATE_TOOL_NAME
     return ReelSpec(
         topic=topic,
-        hook=f"Most people get {topic} completely wrong.",
+        tool_name=tool,
+        hook=f"I automated {topic} in under 5 minutes with {tool}.",
         scenes=[
-            Scene(voiceover=f"Here is what nobody tells you about {topic}.", b_roll_query="city timelapse aerial"),
-            Scene(voiceover="The data shows a very different story.", b_roll_query="financial charts screen"),
-            Scene(voiceover="And it changes how you should think about it.", b_roll_query="person thinking window"),
+            Scene(voiceover=f"Here is the exact workflow I use for {topic}.", b_roll_query="screen recording laptop ui"),
+            Scene(voiceover="Step one: paste your input and pick the template.", b_roll_query="person typing keyboard closeup"),
+            Scene(voiceover="It does in seconds what used to take me hours.", b_roll_query="dashboard analytics screen"),
         ],
-        cta="Follow for the part two.",
+        cta=f"Link in bio to try {tool} for free.",
         accent_color="#00E0A4",
         music_mood="uplifting",
     )

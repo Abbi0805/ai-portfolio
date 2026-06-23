@@ -42,7 +42,11 @@ def make_reel(topic: str) -> dict:
     video_path = render_local(props, slugify(topic))
     print(f"  gerendert: {video_path}")
 
-    result = publish_reel(video_path, caption=spec.hook, hashtags=[spec.music_mood, "reels"])
+    result = publish_reel(
+        video_path,
+        caption=spec.hook,
+        hashtags=["aitools", "productivity", "automation", slugify(spec.tool_name)],
+    )
     print(f"  publish: {result['status']}")
     return {"topic": topic, "status": "ok", "video": video_path, "publish": result}
 
