@@ -24,7 +24,7 @@ AZURE_OPENAI_DEPLOYMENT_FAST = os.getenv("AZURE_OPENAI_DEPLOYMENT_FAST", AZURE_O
 # Content-Library-Strategie: ALLE Reels drehen sich um EIN Affiliate-Produkt
 # und trichtern auf denselben Link. Das maximiert die Conversion pro Klick.
 NICHE = os.getenv("NICHE", "ai-tools")
-AFFILIATE_TOOL_NAME = os.getenv("AFFILIATE_TOOL_NAME", "the tool")
+AFFILIATE_TOOL_NAME = os.getenv("AFFILIATE_TOOL_NAME", "Writesonic")
 AFFILIATE_LINK = os.getenv("AFFILIATE_LINK", "")  # landet in Bio / Pinned-Comment
 AFFILIATE_DISCLOSURE = os.getenv("AFFILIATE_DISCLOSURE", "#ad")  # Pflicht-Kennzeichnung
 

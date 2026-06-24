@@ -5,9 +5,9 @@ import {reelProps, type ReelProps} from './schema';
 
 // Demo-Props, damit die Composition im Remotion Studio ohne Python-Pipeline editierbar ist.
 const defaultProps: ReelProps = {
-  hook: 'I automated my weekly report in under 5 minutes.',
-  cta: 'Link in bio to try it for free.',
-  tool_name: 'NotebookLM',
+  hook: 'I wrote a full SEO article in 5 minutes, not 3 hours.',
+  cta: 'Link in bio to try Writesonic for free.',
+  tool_name: 'Writesonic',
   accent_color: '#00E0A4',
   audio_url: 'PLACEHOLDER_AUDIO',
   duration_in_seconds: 8,

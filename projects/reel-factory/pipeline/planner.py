@@ -66,11 +66,11 @@ def _stub(topic: str) -> ReelSpec:
     return ReelSpec(
         topic=topic,
         tool_name=tool,
-        hook=f"I automated {topic} in under 5 minutes with {tool}.",
+        hook=f"This {tool} workflow saved me three hours today.",
         scenes=[
-            Scene(voiceover=f"Here is the exact workflow I use for {topic}.", b_roll_query="screen recording laptop ui"),
-            Scene(voiceover="Step one: paste your input and pick the template.", b_roll_query="person typing keyboard closeup"),
-            Scene(voiceover="It does in seconds what used to take me hours.", b_roll_query="dashboard analytics screen"),
+            Scene(voiceover="Here is the exact workflow, step by step.", b_roll_query="screen recording laptop ui"),
+            Scene(voiceover="Paste your input and pick the template.", b_roll_query="person typing keyboard closeup"),
+            Scene(voiceover="It does in seconds what took me hours.", b_roll_query="dashboard analytics screen"),
         ],
         cta=f"Link in bio to try {tool} for free.",
         accent_color="#00E0A4",
