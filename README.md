@@ -20,7 +20,7 @@ Agentic workflow runner that separates planning from execution. A planner LLM ge
 **Stack:** Python 3.11 · Azure OpenAI · DuckDuckGo Search · Pydantic
 
 ### [nlq-to-sql](projects/nlq-to-sql)
-Natural-language analytics. Question → SQL (SELECT-only validation, query limits, no write paths) → DuckDB execution → LLM-explained business result. Built for analytical Q&A, not chat.
+Natural-language analytics. Question → SQL → guard (single SELECT only, row cap, enforced *before* execution) → DuckDB → LLM-explained business result. Built for analytical Q&A, not chat.
 **Stack:** Python 3.11 · LangChain · Azure OpenAI · DuckDB · sqlparse
 
 ## Stack
@@ -29,7 +29,16 @@ Python 3.11 · Azure OpenAI (GPT-4o, embeddings, Whisper) · LangChain · FastAP
 
 ## About
 
-Jacob Abb — AI Engineer & Consultant. Building production-grade LLM systems with focus on retrieval quality, evaluation, and operational reliability. Based in northern Germany, open to Swiss / EU remote work.
+Jacob Abb — AI Engineer & Consultant.
+
+Most AI pilots do not fail on the technology. They fail because nobody in the
+business trusts the output, checks every answer against the source, and so
+never gains the time the system was supposed to save. I build RAG and agent
+systems so that check becomes unnecessary: traceable sources, measurable answer
+quality, and guardrails that live in code rather than in documentation.
+
+Alongside this, a doctoral project on why AI systems are adopted in mid-sized
+companies — or are not.
 
 - Azure AI Engineer (AI-102)
 - Azure Data Scientist (DP-100)

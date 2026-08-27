@@ -1,5 +1,4 @@
 from chains.nl_to_sql import build_nl_to_sql_chain
-from validation.sql_guard import validate_sql
 from chains.sql_to_text import explain_result
 from config.settings import *  # Lädt und validiert die Konfiguration
 
@@ -13,9 +12,9 @@ def main():
 
         print("\n⏳ Verarbeite Frage...")
         response = chain.invoke({"question": question})
-        sql_query = response["intermediate_steps"][0]
 
-        safe_sql = validate_sql(sql_query)
+        # Bereits in der Chain validiert -- vor der Ausfuehrung, nicht danach.
+        safe_sql = response["intermediate_steps"][0]
         result = response["result"]
 
         explanation = explain_result(

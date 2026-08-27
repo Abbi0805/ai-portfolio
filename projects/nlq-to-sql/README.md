@@ -14,7 +14,8 @@ LLM "chat-with-your-data" demos break in production:
 Deterministic pipeline that constrains the LLM to one validated step at a time:
 
 1. **NL → SQL chain** with schema-grounded prompt
-2. **Guardrail layer** — SELECT-only, statement-count, row limits, no DDL
+2. **Guardrail layer** — runs *before* execution: rejects anything that is not
+   exactly one SELECT statement, then enforces a row cap
 3. **DuckDB execution** — fast analytical engine, no production DB required
 4. **Result → text chain** — explains the answer using the question, the SQL, and the result rows
 
@@ -24,9 +25,9 @@ Deterministic pipeline that constrains the LLM to one validated step at a time:
 question
    │
    ▼
-NL → SQL chain ──► sqlparse validator ──► reject if not SELECT
+NL → SQL chain ──► sqlparse guard ──► reject: nothing is executed
    │
-   ▼ valid SQL
+   ▼ validated SQL (row cap applied)
 DuckDB execution
    │
    ▼ result rows
@@ -40,12 +41,34 @@ business explanation
 
 Python 3.11 · LangChain · Azure OpenAI (GPT-4o) · DuckDB · sqlparse · Faker (synthetic data)
 
-## Results
+## Guardrail behaviour
 
-- SELECT-only enforcement: <METRIK> of non-SELECT statements correctly rejected
-- Query latency: <METRIK> p50 / <METRIK> p95
-- Cost per question: <METRIK> USD (NL→SQL + execution + result explanation)
-- Test corpus: <METRIK> business questions across <METRIK> tables
+The guard is an executable specification, not a description. Run it without
+credentials or a database:
+
+```bash
+python validation/test_sql_guard.py
+```
+
+| Input | Outcome |
+|---|---|
+| `DELETE` / `UPDATE` / `INSERT` / `DROP` / `CREATE` | rejected, nothing executed |
+| `SELECT 1; DROP TABLE customers` | rejected — statement chains are not allowed |
+| `SELECT * FROM customers` | `LIMIT 100` appended |
+| `SELECT * FROM t WHERE credit_limit > 100` | `LIMIT 100` appended — a column name containing "limit" does not disable the cap |
+| `SELECT * FROM (SELECT * FROM big LIMIT 1) x` | `LIMIT 100` appended — a subquery LIMIT does not bound the outer result |
+| `SELECT * FROM t LIMIT 5` | passed through unchanged |
+
+Two limits worth stating plainly:
+
+- **CTEs are rejected.** `WITH ... SELECT` is reported as `UNKNOWN` by sqlparse,
+  and the guard fails closed rather than guessing.
+- **"SELECT-only" is not the same as "safe".** A legitimate read query can still
+  be expensive or surface data the caller should not see. Row caps and statement
+  limits bound the blast radius; they do not replace least-privilege database
+  credentials.
+
+Latency and cost per question are not measured yet.
 
 ## Run
 
@@ -98,7 +121,8 @@ nlq-to-sql/
 │   ├── nl_to_sql.txt
 │   └── sql_to_text.txt
 └── validation/
-    └── sql_guard.py        # SELECT-only validator
+    ├── sql_guard.py        # SELECT-only guard, runs before execution
+    └── test_sql_guard.py   # executable spec, no credentials needed
 ```
 
 ## Design choices

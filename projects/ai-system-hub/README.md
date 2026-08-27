@@ -51,11 +51,16 @@ Python 3.11 · FastAPI · Pydantic v2 · ChromaDB · Azure OpenAI · Anthropic S
 
 ## Results
 
-- Routing accuracy on test prompts: <METRIK>
-- Gateway + router overhead: <METRIK> ms p50
-- RAG retrieval recall@5: <METRIK>
-- Reranker uplift in NDCG: <METRIK>
-- Cost per request (incl. routing decision): <METRIK> USD
+Not measured yet. The instrumentation is in place — every call is logged with
+prompt, model, latency and cost (`monitoring/logger.py`) — but no benchmark has
+been run against it, so there are no numbers to report here.
+
+The four figures this project is built to produce, once there is a test corpus:
+routing accuracy, gateway and router overhead, retrieval recall@5, and the
+reranker's uplift over plain vector search.
+
+Stating that plainly is the point. A README that reports metrics nobody
+measured is worse than one that reports none.
 
 ## Run
 

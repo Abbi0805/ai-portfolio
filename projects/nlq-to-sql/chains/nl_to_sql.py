@@ -4,6 +4,7 @@ from langchain_openai import AzureChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from config.settings import *
+from validation.sql_guard import validate_sql
 
 def extract_sql_from_response(response: str) -> str:
     """Extrahiert SQL aus einer Antwort, die möglicherweise Text vor/nach SQL enthält"""
@@ -167,15 +168,20 @@ Return ONLY the SQL query:""")
         
         # Extrahiere SQL aus der Antwort (kann Text vor/nach SQL enthalten)
         query = extract_sql_from_response(response)
-        
+
         # Debug: Zeige die extrahierte Query
         print(f"🔍 Extrahierte SQL Query: {query[:200]}...")
-        
-        # Führe Query aus
-        result = db.run(query)
+
+        # Guardrail VOR der Ausfuehrung. Der Prompt verlangt SELECT, aber ein
+        # Prompt ist eine Bitte, keine Kontrolle -- erzwungen wird es hier.
+        # validate_sql wirft bei allem, was nicht genau ein SELECT ist, und
+        # ergaenzt sonst ein LIMIT.
+        safe_query = validate_sql(query)
+
+        result = db.run(safe_query)
         return {
             "result": result,
-            "intermediate_steps": [query]
+            "intermediate_steps": [safe_query]
         }
     
     chain = RunnablePassthrough() | execute_query

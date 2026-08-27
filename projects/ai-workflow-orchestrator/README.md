@@ -44,10 +44,23 @@ Python 3.11 · Azure OpenAI · Pydantic · DuckDuckGo Search (with fallback) · 
 
 ## Results
 
-- End-to-end success rate on benchmark prompts: <METRIK>
-- Tool-input quality (manual rating) before vs. after refinement: <METRIK>
-- Average tokens per workflow run: <METRIK>
-- Average cost per workflow run: <METRIK> USD
+Three recorded runs, kept in `monitoring/reports/`. The tasks are deliberately
+small, so read these as a shape, not as production numbers.
+
+| Run | Tasks | Tools | Duration | Tokens | Cost | Refinement |
+|---|---|---|---|---|---|---|
+| Single web lookup | 1 | web_search | 2.44 s | 288 | $0.010 | skipped |
+| Multi-step research | 4 | web_search, file_writer | 23.53 s | 2,707 | $0.115 | 2,255 executor tokens |
+| Multi-step, partial failure | 4 | web_search, file_writer | 3.90 s | 682 | $0.024 | 50% completion |
+
+The first two rows are the trade-off this project exists to make visible: the
+same architecture costs roughly 11x more and takes 10x longer once steps
+actually depend on each other, because the executor re-queries the model to
+turn planner placeholders into concrete arguments. On the single-step run the
+refinement is skipped entirely and the executor spends nothing.
+
+Not measured yet: success rate over a real benchmark set, and tool-input
+quality before vs. after refinement.
 
 ## Run
 
